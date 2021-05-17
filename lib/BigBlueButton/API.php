@@ -143,6 +143,12 @@ class API {
 
 	private function buildMeetingParams(Room $room, Presentation $presentation = null): CreateMeetingParameters {
 		$createMeetingParams = new CreateMeetingParameters($room->uid, $room->name);
+
+		$binhash = md5($room->name, true);
+		$numhash = unpack('N2', $binhash);
+		$voiceBridge = ( $numhash[1] % 90000 ) + 10000;
+		$createMeetingParams->setVoiceBridge($voiceBridge);
+
 		$createMeetingParams->setAttendeePassword($room->attendeePassword);
 		$createMeetingParams->setModeratorPassword($room->moderatorPassword);
 		$createMeetingParams->setRecord($room->record);
